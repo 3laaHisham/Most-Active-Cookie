@@ -1,16 +1,23 @@
 package com.quantcast.parser;
 
+import com.quantcast.utils.DateRange;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public interface CookieLogParser {
 
     /**
-     * Reads and parses the cookie log from the given file path.
+     * Streams through the CSV, counting cookie frequencies only for timestamps
+     * that fall within any of the provided date ranges.
      *
-     * @param filePath path to the CSV log file
-     * @return list of parsed CookieLogEntry objects
-     * @throws IOException if the file cannot be read
+     * @param filePath path to the CSV file
+     * @param ranges   list of inclusive date ranges to filter by
+     * @return map of cookie -> count
      */
-    List<CookieLogEntry> parse(String filePath) throws IOException;
+    public Map<String, Integer> countFrequencies(
+            String filePath,
+            List<DateRange> ranges
+    ) throws IOException;
 }

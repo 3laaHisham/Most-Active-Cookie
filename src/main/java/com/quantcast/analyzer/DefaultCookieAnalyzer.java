@@ -1,6 +1,7 @@
 package com.quantcast.analyzer;
 
 import com.quantcast.parser.CookieLogEntry;
+import com.quantcast.utils.DateRange;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -9,23 +10,16 @@ import java.util.stream.Collectors;
 public class DefaultCookieAnalyzer implements CookieAnalyzer {
 
     @Override
-    public List<String> findMostActiveCookies(List<CookieLogEntry> entries, LocalDate date) {
-        Map<String, Integer> counts = new HashMap<>();
+    public List<String> findMostActiveCookies(Map<String, Integer> cookiesFrequency, int topN) {
+        if (cookiesFrequency.isEmpty()) return List.of();
 
-        for (CookieLogEntry entry : entries) {
-            if (entry.getTimestamp().toLocalDate().equals(date)) {
-                counts.merge(entry.getCookie(), 1, Integer::sum);
-            }
-        }
+        // Find the maximum top N frequency
 
-        if (counts.isEmpty()) return List.of();
-
-        int maxCount = Collections.max(counts.values());
-
-        return counts.entrySet().stream()
-                .filter(e -> e.getValue() == maxCount)
-                .map(Map.Entry::getKey)
-                .sorted()
-                .collect(Collectors.toList());
+        return cookiesFrequency.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .limit(topN)
+                .map(Map.Entry::getKey).
+                toList();
     }
 }

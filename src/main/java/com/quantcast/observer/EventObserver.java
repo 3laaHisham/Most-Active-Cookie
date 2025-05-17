@@ -9,7 +9,7 @@ public interface EventObserver {
     // parsing
     void parsingStarted(String filePath);
     void parsingProgress(double pct);
-    void lineMalformed(long lineNo, String rawLine);
+    void lineMalformed(String rawLine);
     void parsingCompleted(long totalLines, long malformed);
 
     // analysis

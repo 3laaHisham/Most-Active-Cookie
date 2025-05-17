@@ -2,40 +2,29 @@ package com.quantcast;
 
 import com.quantcast.analyzer.CookieAnalyzer;
 import com.quantcast.analyzer.DefaultCookieAnalyzer;
+import com.quantcast.cli.CliParser;
 import com.quantcast.observer.ConsoleListener;
 import com.quantcast.observer.CookieAppObserver;
 import com.quantcast.observer.LoggerListener;
 import com.quantcast.parser.CookieLogEntry;
 import com.quantcast.parser.CsvCookieLogParser;
+import com.quantcast.utils.DateRange;
 import org.apache.commons.cli.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class MostActiveCookieApp {
     public static void main(String[] args) {
-        Options options = new Options();
-        options.addOption("f", "file", true, "Path to cookie log CSV");
-        options.addOption("d", "date", true, "Target date in YYYY-MM-DD");
-        options.addOption("h", "help", false, "Show help");
-
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter help = new HelpFormatter();
+        var cli = new CliParser();
+        var config = cli.parse(args);
 
         try {
-            CommandLine cmd = parser.parse(options, args);
-            if (cmd.hasOption("h")) {
-                help.printHelp("most-active-cookie", options);
-                return;
-            }
-
-            String file = cmd.getOptionValue("f");
-            String dateStr = cmd.getOptionValue("d");
-            if (file == null || dateStr == null) {
+            String file = config.filePath();
+            List<DateRange> dateRanges = config.ranges();
+            int topN = config.topN();
+            if (file == null || dateRanges == null) {
                 throw new ParseException("Both -f and -d are required");
             }
-
-            LocalDate date = LocalDate.parse(dateStr);
 
             // setup and parse with listener
             CookieAppObserver observer = new CookieAppObserver();
@@ -43,11 +32,11 @@ public class MostActiveCookieApp {
             observer.addListener(new LoggerListener());
 
             CsvCookieLogParser logParser = new CsvCookieLogParser(observer);
-            List<CookieLogEntry> entries = logParser.parse(file);
+            var cookiesFrequency = logParser.countFrequencies(file, dateRanges);
 
             // analyze
             CookieAnalyzer analyzer = new DefaultCookieAnalyzer();
-            List<String> topCookies = analyzer.findMostActiveCookies(entries, date);
+            List<String> topCookies = analyzer.findMostActiveCookies(cookiesFrequency, topN);
 
             // print
             observer.resultReady(topCookies);
