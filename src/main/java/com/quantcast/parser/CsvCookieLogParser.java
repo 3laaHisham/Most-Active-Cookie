@@ -1,8 +1,6 @@
 package com.quantcast.parser;
 
-import com.quantcast.observer.CookieAppObserver;
 import com.quantcast.observer.EventObserver;
-import com.quantcast.observer.ParsingListener;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
