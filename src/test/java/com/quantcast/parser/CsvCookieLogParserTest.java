@@ -1,5 +1,6 @@
 package com.quantcast.parser;
 
+import com.quantcast.observer.EventObserver;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileWriter;
@@ -11,6 +12,48 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CsvCookieLogParserTest {
 
+    public class EmptyEventObserver implements EventObserver {
+        @Override
+        public void parsingStarted(String filePath) {
+            // Empty implementation
+        }
+
+        @Override
+        public void parsingProgress(double pct) {
+            // Empty implementation
+        }
+
+        @Override
+        public void lineMalformed(long lineNo, String rawLine) {
+            // Empty implementation
+        }
+
+        @Override
+        public void parsingCompleted(long totalLines, long malformed) {
+            // Empty implementation
+        }
+
+        @Override
+        public void analysisStarted(int entryCount) {
+            // Empty implementation
+        }
+
+        @Override
+        public void analysisCompleted(int uniqueCookies, int windowSize) {
+            // Empty implementation
+        }
+
+        @Override
+        public void resultReady(List<String> topCookies) {
+            // Empty implementation
+        }
+
+        @Override
+        public void handleException(Throwable t) {
+            // Empty implementation
+        }
+    }
+
     @Test
     void parseValidCsvShouldReturnEntries() throws Exception {
         Path temp = Files.createTempFile("cookies", ".csv");
@@ -20,7 +63,7 @@ class CsvCookieLogParserTest {
             w.write("b,2021-07-01T11:30:00+00:00\n");
         }
 
-        CookieLogParser parser = new CsvCookieLogParser();
+        CsvCookieLogParser parser = new CsvCookieLogParser(new EmptyEventObserver());
         List<CookieLogEntry> entries = parser.parse(temp.toString());
 
         assertEquals(2, entries.size());
@@ -39,7 +82,7 @@ class CsvCookieLogParserTest {
             w.write("another,2021-07-02T10:00:00+00:00\n");
         }
 
-        CookieLogParser parser = new CsvCookieLogParser();
+        CsvCookieLogParser parser = new CsvCookieLogParser(new EmptyEventObserver());
         List<CookieLogEntry> entries = parser.parse(temp.toString());
 
         assertEquals(2, entries.size());

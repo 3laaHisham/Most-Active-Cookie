@@ -2,11 +2,11 @@ package com.quantcast;
 
 import com.quantcast.analyzer.CookieAnalyzer;
 import com.quantcast.analyzer.DefaultCookieAnalyzer;
-import com.quantcast.output.ResultPrinter;
-import com.quantcast.output.StdoutResultPrinter;
+import com.quantcast.observer.ConsoleListener;
+import com.quantcast.observer.CookieAppObserver;
+import com.quantcast.observer.LoggerListener;
 import com.quantcast.parser.CookieLogEntry;
 import com.quantcast.parser.CsvCookieLogParser;
-import com.quantcast.parser.CookieLogParser;
 import org.apache.commons.cli.*;
 
 import java.time.LocalDate;
@@ -37,8 +37,12 @@ public class MostActiveCookieApp {
 
             LocalDate date = LocalDate.parse(dateStr);
 
-            // parse
-            CookieLogParser logParser = new CsvCookieLogParser();
+            // setup and parse with listener
+            CookieAppObserver observer = new CookieAppObserver();
+            observer.addListener(new ConsoleListener());
+            observer.addListener(new LoggerListener());
+
+            CsvCookieLogParser logParser = new CsvCookieLogParser(observer);
             List<CookieLogEntry> entries = logParser.parse(file);
 
             // analyze
@@ -46,8 +50,7 @@ public class MostActiveCookieApp {
             List<String> topCookies = analyzer.findMostActiveCookies(entries, date);
 
             // print
-            ResultPrinter printer = new StdoutResultPrinter();
-            printer.print(topCookies);
+            observer.resultReady(topCookies);
 
         } catch (ParseException e) {
             System.err.println("Argument error: " + e.getMessage());

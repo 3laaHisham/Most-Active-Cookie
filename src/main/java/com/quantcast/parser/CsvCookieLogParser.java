@@ -1,5 +1,9 @@
 package com.quantcast.parser;
 
+import com.quantcast.observer.CookieAppObserver;
+import com.quantcast.observer.EventObserver;
+import com.quantcast.observer.ParsingListener;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,31 +12,38 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CsvCookieLogParser implements CookieLogParser {
+public class CsvCookieLogParser {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    private final EventObserver listener;
 
-    @Override
+    public CsvCookieLogParser(EventObserver listener) {
+        this.listener = listener;
+    }
+
     public List<CookieLogEntry> parse(String filePath) throws IOException {
+        listener.parsingStarted(filePath);
         List<CookieLogEntry> entries = new ArrayList<>();
+        long total = 0, malformed = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line = reader.readLine(); // skip header
-            int lineNum = 1;
+            reader.readLine(); // skip header
+            String line;
             while ((line = reader.readLine()) != null) {
-                lineNum++;
+                total++;
                 String[] parts = line.split(",", 2);
                 if (parts.length < 2) {
-                    // skip malformed
+                    malformed++;
+                    listener.lineMalformed(total, line);
                     continue;
                 }
                 try {
-                    String cookie = parts[0];
-                    OffsetDateTime ts = OffsetDateTime.parse(parts[1], FORMATTER);
-                    entries.add(new CookieLogEntry(cookie, ts));
+                    entries.add(new CookieLogEntry(parts[0],
+                            OffsetDateTime.parse(parts[1], FORMATTER)));
                 } catch (Exception e) {
-                    // skip malformed timestamp
+                    malformed++;
                 }
             }
         }
+        listener.parsingCompleted(total, malformed);
         return entries;
     }
 }
