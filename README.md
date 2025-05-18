@@ -11,7 +11,7 @@ This command-line tool processes a cookie log file to identify the most active c
 * [🚀 Running the Application](#-running-the-application)
 
     * [CLI Usage](#cli-usage)
-    * [Docker](#docker)
+    * [Docker](#or-docker)
 * [📝 Project Structure](#-project-structure)
 * [👷‍♂️ Design Patterns & SOLID Principles](#-design-patterns--solid-principles)
 * [🧪 Testing & Edge Cases](#-testing--edge-cases)
@@ -32,7 +32,7 @@ This command-line tool processes a cookie log file to identify the most active c
 * **Top-N Analysis**
   Returns all cookies sharing the Nth highest frequency, grouping ties correctly.
 * **Observer-Based Logging**
-  Console and SLF4J logger listeners report info, warnings, and errors throughout parsing and analysis.
+  Logs key operations, warnings, and errors via SLF4J listeners. Detailed logs to app.YYYY-MM-DD.log (e.g., app.2025-05-18.log) for traceability.
 * **Modular Analyzer**
   Swap between default (sorting) and heap-based (priority queue) analyzers as needed.
 * **Dockerized Deployment**
@@ -67,7 +67,7 @@ App.java
 
 ### Common Requirements
 
-1. **Git**
+1. **Verify Git Installation**
    Ensure you have Git installed. You can check your Git version with:
 
    ```bash
@@ -77,8 +77,8 @@ App.java
 ```bash
 git clone https://github.com/3laaHisham/Most-Active-Cookie.git
 ```
-2. Navigate to the project directory:
 
+3. **Navigate to the project directory**
    ```bash
    cd Most-Active-Cookie
    ```
@@ -120,7 +120,7 @@ Example:
 java -jar app.jar -f cookies.csv -d 2018-12-9
 ```
 
-### Docker
+### Or Docker
 
 1. **Build the Docker image**
 
