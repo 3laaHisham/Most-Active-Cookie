@@ -65,6 +65,24 @@ App.java
 
 ## 🚀 Running the Application
 
+### Common Requirements
+
+1. **Git**
+   Ensure you have Git installed. You can check your Git version with:
+
+   ```bash
+   git --version
+   ```
+2. **Clone repository**
+```bash
+git clone https://github.com/3laaHisham/Most-Active-Cookie.git
+```
+2. Navigate to the project directory:
+
+   ```bash
+   cd Most-Active-Cookie
+   ```
+
 ### CLI Usage
 
 1. **Verify JRE Installation**
@@ -75,7 +93,7 @@ App.java
    java -version
    ```
    
-2. **Build the JAR**
+2. **Build the JAR (optionally)**
 
    ```bash
    mvn clean package
