@@ -1,33 +1,28 @@
 <configuration>
 
-<!--    &lt;!&ndash; Console Appender &ndash;&gt;-->
-<!--    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
-<!--        <encoder>-->
-<!--            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
+    <!-- Property for log directory -->
+    <property name="LOG_DIR" value="logs" />
 
-    <!-- Rolling File Appender -->
+    <!-- Rolling File Appender writing directly into dated files -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/app.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 7 days’ worth of logs -->
-            <maxHistory>7</maxHistory>
-        </rollingPolicy>
+
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Write logs into files named app.YYYY-MM-DD.log -->
+            <fileNamePattern>${LOG_DIR}/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Keep the last 7 days -->
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
     </appender>
 
-    <!-- Root Logger -->
+    <!-- Root logger to write INFO+ to the FILE appender -->
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
 
-    <!-- Optional: more verbose for your application package -->
+    <!-- Enable DEBUG for your code -->
     <logger name="com.quantcast" level="DEBUG"/>
-
 </configuration>

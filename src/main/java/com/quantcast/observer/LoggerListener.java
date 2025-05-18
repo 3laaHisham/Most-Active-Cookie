@@ -23,6 +23,14 @@ public class LoggerListener implements EventListener {
 
     @Override
     public void exception(Throwable t) {
-        log.error("Unexpected exception", t);
+        log.error("Exception occurred", t);
+        if (t.getCause() != null) {
+            log.error("Caused by: ", t.getCause());
+        }
+        if (t.getMessage() != null) {
+            log.error("Message: ", t.getMessage());
+        }
+        // empty line
+        log.error("");
     }
 }
