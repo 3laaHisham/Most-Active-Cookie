@@ -6,6 +6,7 @@ import java.util.List;
  * Defines all application‑level events your cookie tool can fire.
  */
 public interface EventObserver {
+    void addListener(EventListener listener);
     // parsing
     void parsingStarted(String filePath);
     void parsingProgress(double pct);

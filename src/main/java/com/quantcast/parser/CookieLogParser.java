@@ -13,11 +13,11 @@ public interface CookieLogParser {
      * that fall within any of the provided date ranges.
      *
      * @param filePath path to the CSV file
-     * @param ranges   list of inclusive date ranges to filter by
+     * @param range    date range to filter by
      * @return map of cookie -> count
      */
     public Map<String, Integer> countFrequencies(
             String filePath,
-            List<DateRange> ranges
+            DateRange range
     ) throws IOException;
 }

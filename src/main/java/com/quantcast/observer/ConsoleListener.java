@@ -3,7 +3,7 @@ package com.quantcast.observer;
 public class ConsoleListener implements EventListener {
     @Override
     public void info(String message) {
-        System.out.println("[INFO] " + message);
+        System.out.println(message);
     }
 
     @Override
@@ -18,6 +18,7 @@ public class ConsoleListener implements EventListener {
 
     @Override
     public void exception(Throwable t) {
-        t.printStackTrace(System.err);
+        System.err.println("[EXCEPTION] " + t.getMessage());
+
     }
 }
