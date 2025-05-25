@@ -55,8 +55,13 @@ public class FileCookieLogParser implements CookieLogParser {
                     LocalDate lineDate = OffsetDateTime.parse(parts[TIMESTAMP_INDEX], TIMESTAMP_FORMATTER)
                             .toLocalDate();
 
+                    // If the date is after the range's end, skip this line and continue checking other lines.
+                    // This is because the log is sorted from most recent to oldest, so later lines might still match.
                     if (lineDate.isAfter(range.end()))
                         continue;
+
+                    // If the date is before the range's start, break the loop as no further matches are possible.
+                    // Since the log is sorted, all subsequent lines will also be outside the range.
                     if (lineDate.isBefore(range.start()))
                         break;
 
