@@ -1,5 +1,7 @@
 package com.quantcast.observer;
 
+import com.quantcast.utils.CookieResult;
+
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ public interface EventObserver {
     void analysisCompleted(int uniqueCookies, int windowSize);
 
     // results
-    void resultReady(List<String> topCookies);
+    void resultReady(List<CookieResult> topCookies);
 
     // errors
     void handleException(Throwable t);

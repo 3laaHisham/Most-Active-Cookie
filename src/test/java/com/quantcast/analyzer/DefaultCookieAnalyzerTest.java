@@ -1,7 +1,11 @@
 package com.quantcast.analyzer;
 
+import com.quantcast.observer.EventObserver;
+import com.quantcast.utils.CookieResult;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+
 import java.util.Map;
 import java.util.List;
 
@@ -9,25 +13,31 @@ class DefaultCookieAnalyzerTest {
 
     @Test
     void handlesNullCookiesFrequency() {
-        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(null);
+        EventObserver observer = mock(EventObserver.class);
+        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(observer);
+
         Map<String, Integer> cookiesFrequency = null;
         assertThrows(NullPointerException.class, () -> analyzer.findMostActiveCookies(cookiesFrequency, 3));
     }
 
     @Test
     void handlesZeroTopNRanks() {
-        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(null);
+        EventObserver observer = mock(EventObserver.class);
+        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(observer);
+
         Map<String, Integer> cookiesFrequency = Map.of(
                 "cookie1", 5,
                 "cookie2", 10
         );
-        List<String> result = analyzer.findMostActiveCookies(cookiesFrequency, 0);
+        List<CookieResult> result = analyzer.findMostActiveCookies(cookiesFrequency, 0);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void handlesNegativeTopNRanks() {
-        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(null);
+        EventObserver observer = mock(EventObserver.class);
+        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(observer);
+
         Map<String, Integer> cookiesFrequency = Map.of(
                 "cookie1", 5,
                 "cookie2", 10
@@ -38,19 +48,23 @@ class DefaultCookieAnalyzerTest {
 
     @Test
     void handlesEmptyMapWithPositiveTopNRanks() {
-        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(null);
+        EventObserver observer = mock(EventObserver.class);
+        HeapCookieAnalyzer analyzer = new HeapCookieAnalyzer(observer);
+
         Map<String, Integer> cookiesFrequency = Map.of();
-        List<String> result = analyzer.findMostActiveCookies(cookiesFrequency, 3);
+        List<CookieResult> result = analyzer.findMostActiveCookies(cookiesFrequency, 3);
         assertTrue(result.isEmpty());
     }
 
     @Test
     void handlesSingleCookieInMap() {
-        DefaultCookieAnalyzer analyzer = new DefaultCookieAnalyzer(null);
+        EventObserver observer = mock(EventObserver.class);
+        HeapCookieAnalyzer analyzer = new HeapCookieAnalyzer(observer);
+
         Map<String, Integer> cookiesFrequency = Map.of(
                 "cookie1", 5
         );
-        List<String> result = analyzer.findMostActiveCookies(cookiesFrequency, 3);
-        assertEquals(List.of("cookie1"), result);
+        List<CookieResult> result = analyzer.findMostActiveCookies(cookiesFrequency, 3);
+        assertEquals(List.of( new CookieResult("cookie1")), result);
     }
 }

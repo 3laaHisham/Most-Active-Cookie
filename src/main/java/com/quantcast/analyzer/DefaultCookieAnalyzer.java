@@ -1,6 +1,7 @@
 package com.quantcast.analyzer;
 
 import com.quantcast.observer.EventObserver;
+import com.quantcast.utils.CookieResult;
 
 import java.util.*;
 
@@ -12,15 +13,16 @@ public class DefaultCookieAnalyzer implements CookieAnalyzer {
     }
 
     @Override
-    public List<String> findMostActiveCookies(Map<String, Integer> cookiesFrequency, int topNRanks) {
-        if (cookiesFrequency.isEmpty()) return List.of();
+    public List<CookieResult> findMostActiveCookies(Map<String, Integer> cookiesFrequency, int topNRanks) {
+        int numUniqueElements = cookiesFrequency.size();
+        observer.analysisStarted(numUniqueElements);
 
         // Find the maximum top N frequency
         return cookiesFrequency.entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .limit(topNRanks)
-                .map(Map.Entry::getKey).
+                .map(entry -> new CookieResult(entry.getKey())).
                 toList();
     }
 }

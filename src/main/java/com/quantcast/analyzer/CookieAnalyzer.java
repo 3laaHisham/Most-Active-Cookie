@@ -1,5 +1,7 @@
 package com.quantcast.analyzer;
 
+import com.quantcast.utils.CookieResult;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,5 +17,5 @@ public interface CookieAnalyzer {
      * @param topNRanks number of top cookies to return
      * @return list of cookie values with the highest frequency
      */
-    List<String> findMostActiveCookies(Map<String, Integer> cookiesFrequency, int topNRanks);
+    List<CookieResult> findMostActiveCookies(Map<String, Integer> cookiesFrequency, int topNRanks);
 }

@@ -1,8 +1,11 @@
 package com.quantcast.observer;
 
+import com.quantcast.utils.CookieResult;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Dispatches CookieAppEvents to one or more EventListener implementations.
@@ -52,12 +55,13 @@ public class CookieAppObserver implements EventObserver {
     }
 
     @Override
-    public void resultReady(List<String> topCookies) {
+    public void resultReady(List<CookieResult> topCookies) {
         for (var l : listeners) {
             if (topCookies.isEmpty()) {
                 l.info("No cookies found for given criteria.\n");
             } else {
-                l.info(String.join("\n", topCookies) + "\n");
+                l.info(topCookies.stream().map(CookieResult::toString)
+                        .collect(Collectors.joining("\n")));
             }
         }
     }
