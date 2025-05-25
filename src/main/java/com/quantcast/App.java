@@ -26,9 +26,12 @@ public class App {
         try {
             MostActiveCookie mostActive = new MostActiveCookie(cli, observer, parser, analyzer);
             mostActive.run(args);
+
             return 0;
         } catch (Exception e) {
+            observer.addListener(new ConsoleListener());
             observer.handleException(e);
+
             return 2;
         }
     }
@@ -36,6 +39,7 @@ public class App {
     private static CookieAppObserver getCookieAppObserver() {
         CookieAppObserver obs = new CookieAppObserver();
         obs.addListener(new LoggerListener());
+
         return obs;
     }
 }
