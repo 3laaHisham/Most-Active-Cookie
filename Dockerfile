@@ -9,7 +9,7 @@ RUN mvn clean package
 # Stage 2: run with lightweight JRE
 FROM eclipse-temurin:21-jre
 
-WORKDIR /app
-COPY --from=build /app/target/most-active-cookie.jar ./app.jar
+WORKDIR /
+COPY --from=build /app/target/most-active-cookie.jar app/app.jar
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app/app.jar"]

@@ -104,7 +104,7 @@ git clone https://github.com/3laaHisham/Most-Active-Cookie.git
 3. **Run**
 
    ```bash
-   java -jar target/most-active-cookie.jar \
+   java -jar /path/to/app.jar \
      -f /path/to/cookie_log.csv \
      -d 2025-05-16[:2025-05-18] \
      -t 3
@@ -117,7 +117,7 @@ git clone https://github.com/3laaHisham/Most-Active-Cookie.git
 Example:
 
 ```bash
-java -jar app.jar -f cookies.csv -d 2018-12-9
+java -jar target/most-active-cookie.jar -f cookies.csv -d 2018-12-09
 ```
 
 ### Or Docker
@@ -136,10 +136,19 @@ java -jar app.jar -f cookies.csv -d 2018-12-9
    docker build -t macf:latest .
    ```
 3. **Run the container**
+ 
+on Windows:
 
    ```bash
-   docker run -v /cookies.csv:/data/cookies.csv macf:latest -f /data/cookies.csv -d 2018-12-9
+   docker run --rm -v "%cd%\cookies.csv:/data/cookies.csv:ro" macf:latest -f /data/cookies.csv -d 2018-12-09
    ```
+
+on Linux:
+
+    ```bash
+    docker run --rm -v $(pwd)/cookies.csv:/data/cookies.csv macf:latest -f /data/cookies.csv -d 2018-12-09
+    ```
+
 
 ## 📝 Project Structure
 
