@@ -19,7 +19,6 @@ import java.util.Objects;
  */
 public class FileCookieLogParser implements CookieLogParser {
     private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-    private static final int PROGRESS_INTERVAL = 10_000;
     private final int COOKIE_NAME_INDEX = 0;
     private final int TIMESTAMP_INDEX = 1;
 
@@ -53,12 +52,12 @@ public class FileCookieLogParser implements CookieLogParser {
                 }
 
                 try {
-                    LocalDate date = OffsetDateTime.parse(parts[TIMESTAMP_INDEX], TIMESTAMP_FORMATTER)
+                    LocalDate lineDate = OffsetDateTime.parse(parts[TIMESTAMP_INDEX], TIMESTAMP_FORMATTER)
                             .toLocalDate();
 
-                    if (date.isAfter(range.end()))
+                    if (lineDate.isAfter(range.end()))
                         continue;
-                    if (date.isBefore(range.start()))
+                    if (lineDate.isBefore(range.start()))
                         break;
 
                 } catch (DateTimeParseException e) {
